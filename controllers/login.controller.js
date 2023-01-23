@@ -4,9 +4,9 @@ import bcrypt from 'bcrypt';
 export async function login(req, res, next){
     const {email, senha} = req.body;
     const user = await usersCollection.findOne({email})
-    const isValid = bcrypt.compareSync(senha, user.hashSenha)
-
+    
     try{
+        const isValid = bcrypt.compareSync(senha, user.hashSenha)
         if(isValid){
             const session = await sessionsCollection.findOne({userId: user._id})
             res.status(200).send(session.token)

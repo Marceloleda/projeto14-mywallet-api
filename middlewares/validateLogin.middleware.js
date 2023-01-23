@@ -1,5 +1,4 @@
 import { loginSchema } from "../models/loginSchemas.model.js";
-import bcrypt from 'bcrypt';
 
 export async function validateLogin(req, res, next){
     const {body} = req;

@@ -7,12 +7,12 @@ export async function cadastro(req, res, next){
     const hashPassword = bcrypt.hashSync(senha, 10)
     const token = uuidv4();
     const entrada = []
-    const saida = []
     try{
         const user = await usersCollection.insertOne({
             nome,
             email,
-            hashSenha: hashPassword
+            hashSenha: hashPassword,
+            saldo: 0
         })
         if(user){
             await sessionsCollection.insertOne({
@@ -21,8 +21,7 @@ export async function cadastro(req, res, next){
             })
             await registrationCollection.insertOne({
                 token,
-                entrada,
-                saida
+                entrada
             })
 
         }

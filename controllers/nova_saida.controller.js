@@ -1,12 +1,14 @@
-import { registrationCollection } from "../database/db.js";
+import dayjs from "dayjs";
+import { registrationCollection, usersCollection, sessionsCollection } from "../database/db.js";
 
 export async function nova_saida(req, res){
     const {valor, descricao} = req.body;
     const token = req.headers.authorization?.replace('Bearer ', '');
+    const data = dayjs().format('DD/MM')
+
   
     try{
-        const registro = await registrationCollection.findOne({token})
-
+        const session = await sessionsCollection.findOne(token)
         const sequence = await registrationCollection.findOneAndUpdate(
             { token: token },
             { $inc: { value: 1 } },
@@ -14,10 +16,14 @@ export async function nova_saida(req, res){
         await registrationCollection.updateOne(
             {token: token},
             {$push: 
-                {saida: {id: sequence.value.value, valor, descricao}}}
+                {entrada: {id: sequence.value.value,data: data, valor, descricao, tipo: "negativo"}}}
         )
+        const usuario = await usersCollection.findOne({_id: session.userId});
 
-        res.sendStatus(200)
+        await usersCollection.updateOne(
+			{_id: session.userId}, 
+			{$set: {saldo: usuario.saldo - valor}}
+		);
     }
     catch(error){
         return res.send(error.message)
