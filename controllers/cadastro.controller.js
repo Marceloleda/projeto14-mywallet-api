@@ -1,4 +1,4 @@
-import { usersCollection, sessionsCollection } from "../database/db.js";
+import { usersCollection, sessionsCollection, registrationCollection } from "../database/db.js";
 import bcrypt from 'bcrypt';
 import {v4 as uuidv4} from 'uuid';
 
@@ -17,6 +17,10 @@ export async function cadastro(req, res, next){
                 token,
                 userId: user.insertedId
             })
+            await registrationCollection.insertOne({
+                token
+            })
+
         }
         res.status(201).send("sucesso")
     }catch(error){
