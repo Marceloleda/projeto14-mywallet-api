@@ -1,6 +1,6 @@
 import { sessionsCollection } from "../database/db.js";
 
-export async function validateHome(req, res, next){
+export async function validateToken(req, res, next){
     const token = req.headers.authorization?.replace('Bearer ', '');
     const isValidToken = await sessionsCollection.findOne({token})
     

@@ -11,7 +11,7 @@ export async function home(req, res){
 
         delete user.hashSenha
         delete registro.token
-        res.send({user, registro})
+        res.status(200).send({user, registro})
     }
     catch(error){
         return res.send(error.message)
