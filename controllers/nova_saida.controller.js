@@ -2,7 +2,9 @@ import dayjs from "dayjs";
 import { registrationCollection, usersCollection, sessionsCollection } from "../database/db.js";
 
 export async function nova_saida(req, res){
-    const {valor, descricao} = req.body;
+    const { descricao} = req.body;
+    const valo = parseInt(req.body.valor)
+    const valor = valo.toLocaleString('pt-BR', { minimumFractionDigits: 2});
     const token = req.headers.authorization?.replace('Bearer ', '');
     const data = dayjs().format('DD/MM')
 

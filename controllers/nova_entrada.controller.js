@@ -3,7 +3,10 @@ import { ObjectId } from "mongodb";
 import { registrationCollection, sessionsCollection, usersCollection } from "../database/db.js";
 
 export async function nova_entrada(req, res){
-    const {valor, descricao} = req.body;
+    const { descricao} = req.body;
+    const valo = parseInt(req.body.valor)
+    const valor = valo.toLocaleString('pt-BR', { minimumFractionDigits: 2});
+    console.log(valor)
     const token = req.headers.authorization?.replace('Bearer ', '');
     const data = dayjs().format('DD/MM')
   
