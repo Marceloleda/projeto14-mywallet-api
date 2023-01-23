@@ -8,7 +8,7 @@ export async function nova_entrada(req, res){
     const data = dayjs().format('DD/MM')
   
     try{
-        const session = await sessionsCollection.findOne(token)
+        const session = await sessionsCollection.findOne({token})
         const sequence = await registrationCollection.findOneAndUpdate(
             { token: token },
             { $inc: { value: 1 } },
@@ -19,11 +19,13 @@ export async function nova_entrada(req, res){
                 {entrada: {id: sequence.value.value,data: data, valor, descricao, tipo: "positivo"}}}
         )
         const usuario = await usersCollection.findOne({_id: ObjectId(session.userId)});
-
+        const valorInt = parseInt(req.body.valor)
         await usersCollection.updateOne(
-			{_id: session.userId}, 
-			{$set: {saldo: usuario.saldo + valor}}
+			{_id: ObjectId(session.userId)}, 
+			{$set: {saldo: usuario.saldo + valorInt}}
 		);
+
+        res.sendStatus(200)
     }
     catch(error){
         return res.send(error.message)
